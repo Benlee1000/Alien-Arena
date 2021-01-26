@@ -114,7 +114,7 @@ int main()
 
 	// Load the font
 	Font font;
-	font.loadFromFile("fonts/zombiecontrol.ttf");
+	font.loadFromFile("fonts/earthorbiter.ttf");
 
 	// Paused
 	Text pausedText;
@@ -139,7 +139,7 @@ int main()
 	levelUpText.setFillColor(Color::White);
 	levelUpText.setPosition(150, 250);
 	std::stringstream levelUpStream;
-	levelUpStream << "1- Increased rate of fire" << "\n2- Increased clip size(next reload)" << "\n3- Increased max health" << "\n4- Increased run speed" << "\n5- More and better health pickups" << "\n6- More and better ammo pickups";
+	levelUpStream << "1- Increased max health" << "\n2- Increased run speed" << "\n3- More and better health pickups" << "\n4- More and better ammo pickups";
 	levelUpText.setString(levelUpStream.str());
 
 	// Ammo
@@ -371,35 +371,23 @@ int main()
 			// Handle the player LEVELING up
 			if (event.key.code == Keyboard::Num1)
 			{
-				// Increase fire rate
-				//fireRate++;
-				state = State::PLAYING;
-			}
-			if (event.key.code == Keyboard::Num2)
-			{
-				// Increase clip size
-				//clipSize += clipSize;
-				state = State::PLAYING;
-			}
-			if (event.key.code == Keyboard::Num3)
-			{
 				// Increase health
 				player.upgradeHealth();
 				state = State::PLAYING;
 			}
-			if (event.key.code == Keyboard::Num4)
+			if (event.key.code == Keyboard::Num2)
 			{
 				// Increase speed
 				player.upgradeSpeed();
 				state = State::PLAYING;
 			}
-			if (event.key.code == Keyboard::Num5)
+			if (event.key.code == Keyboard::Num3)
 			{
 				// Upgrade health pickup
 				healthPickup.upgrade();
 				state = State::PLAYING;
 			}
-			if (event.key.code == Keyboard::Num6)
+			if (event.key.code == Keyboard::Num4)
 			{
 				// Upgrade ammo pickup
 				ammoPickup.upgrade();
