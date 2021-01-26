@@ -99,7 +99,7 @@ int main()
 
 	// For the home/game over screen
 	Sprite spriteGameOver;
-	Texture textureGameOver = TextureHolder::GetTexture("graphics/background.png");
+	Texture textureGameOver = TextureHolder::GetTexture("graphics/background.jpg");
 	spriteGameOver.setTexture(textureGameOver);
 	spriteGameOver.setPosition(0, 0);
 
@@ -110,7 +110,7 @@ int main()
 	Sprite spriteAmmoIcon;
 	Texture textureAmmoIcon = TextureHolder::GetTexture("graphics/ammo_icon.png");
 	spriteAmmoIcon.setTexture(textureAmmoIcon);
-	spriteAmmoIcon.setPosition(20, 980);
+	spriteAmmoIcon.setPosition(145, 988);
 
 	// Load the font
 	Font font;
