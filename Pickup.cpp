@@ -30,9 +30,9 @@ void Pickup::setArena(IntRect arena)
 {
 	// Copy the details of the arena to the pickup's m_Arena
 	m_Arena.left = arena.left + 50;
-	m_Arena.width = arena.width - 50;
+	m_Arena.width = arena.width - 100;
 	m_Arena.top = arena.top + 50;
-	m_Arena.height = arena.height - 50;
+	m_Arena.height = arena.height - 100;
 	spawn();
 }
 

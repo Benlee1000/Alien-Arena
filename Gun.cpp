@@ -39,6 +39,7 @@ bool Gun::reload()
 	if (m_bulletsSpare >= m_clipSize)
 	{
 		// Plenty of bullets. Reload.
+		// Possibly change this so the clip isn't "lost" and you can't reload when full
 		m_bulletsInClip = m_clipSize;
 		m_bulletsSpare -= m_clipSize;
 		return true;
