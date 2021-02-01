@@ -10,6 +10,7 @@
 #include "Pickup.h"
 #include "math.h"
 #include "Gun.h"
+#include "PickupTypes.h"
 using namespace sf;
 
 
@@ -90,8 +91,18 @@ int main()
 	spriteCrosshair.setOrigin(25, 25);
 
 	// Create a couple of pickups
-	Pickup healthPickup(1);
-	Pickup ammoPickup(2);
+	Pickup healthPickup(PickupType::HEALTH);
+	Pickup ammoPickup(PickupType::AMMO);
+	Pickup ak47Pickup(PickupType::AK47);
+	Pickup m16Pickup(PickupType::M16);
+	Pickup sa80Pickup(PickupType::SA80);
+	Pickup p90Pickup(PickupType::P90);
+
+	// Handle weapon pickup despawning 
+	bool ak47Spawned = true;
+	bool m16Spawned = true;
+	bool sa80Spawned = true;
+	bool p90Spawned = true;
 
 	// About the game
 	int score = 0;
@@ -201,7 +212,7 @@ int main()
 	int framesSinceLastHUDUpdate = 0;
 
 	// How often (in frames) should we update the HUD
-	int fpsMeasurementFrameInterval = 500;
+	int fpsMeasurementFrameInterval = 10;
 
 	// Prepare the hit sound
 	SoundBuffer hitBuffer;
@@ -292,6 +303,12 @@ int main()
 					// Reset the pickup upgrades
 					healthPickup.reset();
 					ammoPickup.reset();
+
+					// Reset gun pickups
+					ak47Spawned = true;
+					m16Spawned = true;
+					sa80Spawned = true;
+					p90Spawned = true;
 				}
 				if (state == State::PLAYING)
 				{
@@ -399,8 +416,8 @@ int main()
 				wave++;
 
 				// Prepare the level
-				arena.width = 250 * wave + 500;
-				arena.height = 250 * wave + 500;
+				arena.width = 100 * wave + 700; // 250 * wave + 500
+				arena.height = 100 * wave + 700;
 				arena.left = 0;
 				arena.top = 0;
 
@@ -414,9 +431,25 @@ int main()
 				// Configure the pick-ups
 				healthPickup.setArena(arena);
 				ammoPickup.setArena(arena);
-
-				// Create a horde of Aliens
-				numAliens = 6 * wave;
+				if ((wave == 3 || wave == 4) && ak47Spawned)
+				{
+					ak47Pickup.setArena(arena);
+				}
+				else if ((wave == 5 || wave == 6) && m16Spawned)
+				{
+					m16Pickup.setArena(arena);
+				}
+				else if ((wave == 7 || wave == 8) && sa80Spawned)
+				{
+					sa80Pickup.setArena(arena);
+				}
+				else if ((wave == 9 || wave == 10) && p90Spawned)
+				{
+					p90Pickup.setArena(arena);
+				}
+		
+				// Create a horde of Aliens, default 5 * aliens
+				numAliens = 4 * wave;
 
 				// Delete the previously allocated memory (if it exists)
 				delete[] aliens;
@@ -488,6 +521,41 @@ int main()
 			healthPickup.update(dtAsSeconds);
 			ammoPickup.update(dtAsSeconds);
 
+			if (wave >= 3 && wave <= 4)
+			{
+				ak47Pickup.update(dtAsSeconds);
+			}
+			else if (wave >= 5 && wave <= 6)
+			{
+				if (ak47Spawned)
+				{
+					// Despawn weapon previous weapon pickups
+					ak47Pickup.gotWeapon();
+					ak47Spawned = false;
+				}
+				m16Pickup.update(dtAsSeconds);
+			}
+			else if (wave >= 7 && wave <= 8)
+			{
+				if (m16Spawned)
+				{
+					// Despawn weapon previous weapon pickups
+					m16Pickup.gotWeapon();
+					m16Spawned = false;
+				}
+				sa80Pickup.update(dtAsSeconds);
+			}
+			else if (wave >= 9 && wave <= 10)
+			{
+				if (sa80Spawned)
+				{
+					// Despawn weapon previous weapon pickups
+					sa80Pickup.gotWeapon();
+					sa80Spawned = false;
+				}
+				p90Pickup.update(dtAsSeconds);
+			}
+
 			// Collision detection
 			// Have any Aliens been shot?
 			for (int i = 0; i < 100; i++)
@@ -549,7 +617,7 @@ int main()
 			// Has the player touched health pickup
 			if (player.getPosition().intersects(healthPickup.getPosition()) && healthPickup.isSpawned())
 			{
-				player.increaseHealthLevel(healthPickup.gotIt());
+				player.increaseHealthLevel(healthPickup.gotIt(gun));
 
 				// Play a sound
 				pickup.play();
@@ -558,10 +626,55 @@ int main()
 			// Has the player touched ammo pickup
 			if (player.getPosition().intersects(ammoPickup.getPosition()) && ammoPickup.isSpawned())
 			{
-				gun.addBulletsSpare(ammoPickup.gotIt());
+				gun.addBulletsSpare(ammoPickup.gotIt(gun));
 
 				// Play a sound
 				reload.play();
+			}
+
+			// Has the player touched AK47 pickup
+			if (player.getPosition().intersects(ak47Pickup.getPosition()) && ak47Pickup.isSpawned())
+			{
+				ak47Pickup.gotWeapon();
+				player.setGun("AK47");
+				// Set gun stats: Spare Ammo, Clip Ammo, Clip Size, Fire Rate, x Offset, y Offset
+				gun.setWeapon(36, 12, 12, 2, 36, 10);
+				ak47Spawned = false;
+				// Play a sound
+				pickup.play();
+			}
+
+			// Has the player touched M16 pickup
+			if (player.getPosition().intersects(m16Pickup.getPosition()) && m16Pickup.isSpawned())
+			{
+				m16Pickup.gotWeapon();
+				player.setGun("M16");
+				gun.setWeapon(48, 16, 16, 3, 42, 10);
+				m16Spawned = false;
+				// Play a sound
+				pickup.play();
+			}
+
+			// Has the player touched SA80 pickup
+			if (player.getPosition().intersects(sa80Pickup.getPosition()) && sa80Pickup.isSpawned())
+			{
+				sa80Pickup.gotWeapon();
+				player.setGun("SA80");
+				gun.setWeapon(60, 20, 20, 4, 42, 10);
+				sa80Spawned = false;
+				// Play a sound
+				pickup.play();
+			}
+
+			// Has the player touched P90 pickup
+			if (player.getPosition().intersects(p90Pickup.getPosition()) && p90Pickup.isSpawned())
+			{
+				p90Pickup.gotWeapon();
+				player.setGun("P90");
+				gun.setWeapon(100, 50, 50, 10, 34, 10);
+				p90Spawned = false;
+				// Play a sound
+				pickup.play();
 			}
 
 			// size up the health bar
@@ -647,6 +760,22 @@ int main()
 			if (healthPickup.isSpawned())
 			{
 				window.draw(healthPickup.getSprite());
+			}
+			if (ak47Pickup.isSpawned())
+			{
+				window.draw(ak47Pickup.getSprite());
+			}
+			if (m16Pickup.isSpawned())
+			{
+				window.draw(m16Pickup.getSprite());
+			}
+			if (sa80Pickup.isSpawned())
+			{
+				window.draw(sa80Pickup.getSprite());
+			}
+			if (p90Pickup.isSpawned())
+			{
+				window.draw(p90Pickup.getSprite());
 			}
 
 			//Draw the crosshair

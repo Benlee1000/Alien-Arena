@@ -158,6 +158,7 @@
     <ClInclude Include="Bullet.h" />
     <ClInclude Include="Gun.h" />
     <ClInclude Include="Pickup.h" />
+    <ClInclude Include="PickupTypes.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="TextureHolder.h" />
     <ClInclude Include="Alien.h" />

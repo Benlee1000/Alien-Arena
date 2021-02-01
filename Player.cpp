@@ -9,7 +9,11 @@ Player::Player()
 	m_MaxHealth = START_HEALTH;
 
 	// Textures for every gun
-	gunTextures["StarterWeapon"] = TextureHolder::GetTexture("graphics/player1.png");
+	gunTextures["StarterWeapon"] = TextureHolder::GetTexture("graphics/player-starter.png");
+	gunTextures["AK47"] = TextureHolder::GetTexture("graphics/player-AK47.png");
+	gunTextures["M16"] = TextureHolder::GetTexture("graphics/player-M16.png");
+	gunTextures["SA80"] = TextureHolder::GetTexture("graphics/player-SA80.png");
+	gunTextures["P90"] = TextureHolder::GetTexture("graphics/player-P90.png");
 
 	// Set the sprite to the default gun
 	m_Sprite = Sprite(gunTextures["StarterWeapon"]);

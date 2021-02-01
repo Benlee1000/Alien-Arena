@@ -11,6 +11,10 @@ int Gun::getBulletsInClip()
 	return m_bulletsInClip;
 }
 
+int Gun::getClipSize()
+{
+	return m_clipSize;
+}
 
 Bullet* Gun::getBullets()
 {

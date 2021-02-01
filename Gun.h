@@ -29,6 +29,7 @@ public:
 	//Getters for dispalying gun information
 	int getBulletsSpare();
 	int getBulletsInClip();
+	int getClipSize();
 	Sprite getSprite();
 	Bullet* getBullets();
 	void addBulletsSpare(int bulletsSpare);

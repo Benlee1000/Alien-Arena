@@ -1,25 +1,52 @@
 #include "Pickup.h"
 #include "TextureHolder.h"
 
-Pickup::Pickup(int type)
+Pickup::Pickup(PickupType pickupType)
 {
 	// Store the type of this pickup
-	m_Type = type;
+	m_Type = pickupType;
 
 	// Associate the texture with the sprite
-	if (m_Type == 1)
+	if (m_Type == PickupType::HEALTH)
 	{
 		m_Sprite = Sprite(TextureHolder::GetTexture("graphics/health_pickup.png"));
 		
 		// How much is pickup worth
 		m_Value = HEALTH_START_VALUE;
+
+		// Set random value
+		randValue = 1;
 	}
-	else
+	else if (m_Type == PickupType::AMMO)
 	{
 		m_Sprite = Sprite(TextureHolder::GetTexture("graphics/ammo_pickup.png"));
 		
 		// How much is pickup worth
 		m_Value = AMMO_START_VALUE;
+
+		// Set random value
+		randValue = 2;
+	}
+	else 
+	{
+		if (m_Type == PickupType::AK47)
+		{
+			m_Sprite = Sprite(TextureHolder::GetTexture("graphics/AK47.png"));
+		}
+		else if (m_Type == PickupType::M16)
+		{
+			m_Sprite = Sprite(TextureHolder::GetTexture("graphics/M16.png"));
+		}
+		else if (m_Type == PickupType::SA80)
+		{
+			m_Sprite = Sprite(TextureHolder::GetTexture("graphics/SA80.png"));
+		}
+		else if (m_Type == PickupType::P90)
+		{
+			m_Sprite = Sprite(TextureHolder::GetTexture("graphics/P90.png"));
+		}
+		m_Value = 0;
+		randValue = 3;
 	}
 	m_Sprite.setOrigin(25, 25);
 	m_SecondsToLive = START_SECONDS_TO_LIVE;
@@ -34,15 +61,16 @@ void Pickup::setArena(IntRect arena)
 	m_Arena.top = arena.top + 50;
 	m_Arena.height = arena.height - 100;
 	spawn();
+	
 }
 
 void Pickup::spawn()
 {
-	// Spawn at a random location
-	srand((int)time(0) / m_Type);
-	int x = (rand() % m_Arena.width);
-	srand((int)time(0) * m_Type);
-	int y = (rand() % m_Arena.height);
+	// Spawn at a random location, in the arena
+	srand((int)time(0) / randValue);
+	int x = (rand() % m_Arena.width) + 50;
+	srand((int)time(0) * randValue);
+	int y = (rand() % m_Arena.height) + 50;
 	m_SecondsSinceSpawn = 0;
 	m_Spawned = true;
 	m_Sprite.setPosition(x, y);
@@ -63,15 +91,34 @@ bool Pickup::isSpawned()
 	return m_Spawned;
 }
 
-int Pickup::gotIt()
+int Pickup::gotIt(Gun gun)
 {
 	m_Spawned = false;
 	m_SecondsSinceDeSpawn = 0;
+
+	if (m_Type == PickupType::AMMO)
+	{
+		return m_Value * gun.getClipSize();
+	}
 	return m_Value;
+}
+
+void Pickup::gotWeapon()
+{
+	m_Spawned = false;
+	m_weapon_got = true;
+	m_SecondsSinceDeSpawn = 0;
+
 }
 
 void Pickup::update(float elapsedTime)
 {
+	if (m_weapon_got)
+	{
+		// Exit update function if the weapon has been recieved
+		return;
+	}
+
 	if (m_Spawned)
 	{
 		m_SecondsSinceSpawn += elapsedTime;
@@ -99,7 +146,7 @@ void Pickup::update(float elapsedTime)
 
 void Pickup::upgrade()
 {
-	if (m_Type == 1)
+	if (m_Type == PickupType::HEALTH)
 	{
 		m_Value += (HEALTH_START_VALUE * .5);
 	}
@@ -115,7 +162,7 @@ void Pickup::upgrade()
 
 void Pickup::reset()
 {
-	if (m_Type == 1)
+	if (m_Type == PickupType::HEALTH)
 	{
 		m_Value = HEALTH_START_VALUE;
 	}
