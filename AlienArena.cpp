@@ -55,8 +55,9 @@ int main()
 	// relation to screen coordinates
 	Vector2i mouseScreenPosition;
 
-	// Create an instance of the Player class
+	// Create an instance of the Player class and a gun type variable
 	Player player;
+	string gunType;
 
 	//Create an instance of the gun, set values for starter weapon
 	Gun gun;
@@ -226,11 +227,35 @@ int main()
 	Sound splat;
 	splat.setBuffer(splatBuffer);
 
-	// Prepare the shoot sound
+	// Prepare the default shoot sound
 	SoundBuffer shootBuffer;
 	shootBuffer.loadFromFile("sound/shoot.wav");
 	Sound shoot;
 	shoot.setBuffer(shootBuffer);
+
+	// Prepare the AK47 shoot sound
+	SoundBuffer shootAK47Buffer;
+	shootAK47Buffer.loadFromFile("sound/AK47_shoot.wav");
+	Sound shootAK47;
+	shootAK47.setBuffer(shootAK47Buffer);
+
+	// Prepare the M16 shoot sound
+	SoundBuffer shootM16Buffer;
+	shootM16Buffer.loadFromFile("sound/M16_shoot.wav");
+	Sound shootM16;
+	shootM16.setBuffer(shootM16Buffer);
+
+	// Prepare the SA80 shoot sound
+	SoundBuffer shootSA80Buffer;
+	shootSA80Buffer.loadFromFile("sound/SA80_shoot.wav");
+	Sound shootSA80;
+	shootSA80.setBuffer(shootSA80Buffer);
+
+	// Prepare the P90 shoot sound
+	SoundBuffer shootP90Buffer;
+	shootP90Buffer.loadFromFile("sound/P90_shoot.wav");
+	Sound shootP90;
+	shootP90.setBuffer(shootP90Buffer);
 
 	// Prepare the reload sound
 	SoundBuffer reloadBuffer;
@@ -377,7 +402,28 @@ int main()
 			{
 				if (gun.fireBullet(player, gameTimeTotal, lastPressed, mouseWorldPosition))
 				{
-					shoot.play();
+					gunType = player.getGun();
+					if (gunType == "StarterWeapon")
+					{
+						shoot.play();
+					}
+					else if (gunType == "AK47")
+					{
+						shootAK47.play();
+					}
+					else if (gunType == "M16")
+					{
+						shootM16.play();
+					}
+					else if (gunType == "SA80")
+					{
+						shootSA80.play();
+					}
+					else if (gunType == "P90")
+					{
+						shootP90.play();
+					}
+					
 				}
 			} // End fire a bullet
 		} // End WASD and shooting while playing
@@ -416,8 +462,8 @@ int main()
 				wave++;
 
 				// Prepare the level
-				arena.width = 100 * wave + 700; // 250 * wave + 500
-				arena.height = 100 * wave + 700;
+				arena.width = 50 * wave + 800; // 250 * wave + 500
+				arena.height = 50 * wave + 800;
 				arena.left = 0;
 				arena.top = 0;
 
@@ -448,7 +494,7 @@ int main()
 					p90Pickup.setArena(arena);
 				}
 		
-				// Create a horde of Aliens, default 5 * aliens
+				// Create a horde of Aliens, default 4 * wave
 				numAliens = 4 * wave;
 
 				// Delete the previously allocated memory (if it exists)

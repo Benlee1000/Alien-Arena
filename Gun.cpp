@@ -28,7 +28,6 @@ void Gun::addBulletsSpare(int bulletsSpare)
 
 void Gun::setWeapon(int bulletsSpare, int bulletsInClip, int clipSize, float fireRate, int bulletOffsetx, int bulletOffsety)
 {
-
 	m_bulletsSpare = bulletsSpare;
 	m_bulletsInClip = bulletsInClip;
 	m_clipSize = clipSize;

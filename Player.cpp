@@ -17,6 +17,7 @@ Player::Player()
 
 	// Set the sprite to the default gun
 	m_Sprite = Sprite(gunTextures["StarterWeapon"]);
+	m_GunType = "StarterWeapon";
 
 	// Set the origin of the sprite to the center,
 	// for smooth rotation
@@ -201,6 +202,12 @@ void Player::increaseHealthLevel(int amount)
 
 void Player::setGun(string gun)
 {
+	m_GunType = gun;
 	m_Sprite = Sprite(gunTextures[gun]);
 	m_Sprite.setOrigin(30, 35);
+}
+
+string Player::getGun()
+{
+	return m_GunType;
 }

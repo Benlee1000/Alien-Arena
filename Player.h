@@ -46,7 +46,8 @@ private:
 	// Speed in pixels per second
 	float m_Speed;
 
-
+	// The player's current gun
+	string m_GunType;
 
 public:
 	Player();
@@ -100,8 +101,12 @@ public:
 	// How much health has the player currently got?
 	int getHealth();
 
-	// Send a copy of Gun to the main function
+	// Set the gun texture
 	void setGun(string gun);
+
+	// Send a string indicating the current gun to the main function
+	string getGun();
+
 };
 
 
