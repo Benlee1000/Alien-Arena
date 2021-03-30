@@ -1,3 +1,5 @@
+// Disclaimer: The inspiration for this game was based off a project in "Beginning C++ Programming" by John Norton
+
 #include <sstream>
 #include <fstream>
 #include <SFML/Graphics.hpp>
